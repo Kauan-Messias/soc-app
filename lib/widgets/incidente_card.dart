@@ -2,14 +2,28 @@ import 'package:flutter/material.dart';
 import "../models/incidentes.dart";
 
 // Classe de Widgets
-class IncidenteCard extends StatelessWidget {
+class IncidenteCard extends StatefulWidget {
   final Incidente incidente;
 
   const IncidenteCard({super.key, required this.incidente});
 
   @override
+  State<IncidenteCard> createState() => _IncidenteCardState();
+}
+
+  class _IncidenteCardState extends State<IncidenteCard> {
+    StatusIncidente _statusAtual = StatusIncidente.aberto;
+
+    @override
+    void initState() {
+      super.initState();
+      _statusAtual = widget.incidente.status;
+    }
+
+
+  @override
   Widget build(BuildContext context) {
-    final severidade = incidente.severidade;
+    final severidade = widget.incidente.severidade;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -35,7 +49,7 @@ class IncidenteCard extends StatelessWidget {
 
                 Expanded(
                   child: Text(
-                    incidente.titulo,
+                    widget.incidente.titulo,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -46,27 +60,36 @@ class IncidenteCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "#${incidente.id} · ${incidente.tipo.rotulo}",
+              "#${widget.incidente.id} · ${widget.incidente.tipo.rotulo}",
               style: TextStyle(
                 color: Colors.grey[500],
                 fontSize: 13,
-  
-
-              )
-             
+              ),
             ),
-
+            const SizedBox(height: 8),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _StatusChip(
-                  rotulo: "Severidade: ${severidade.rotulo}",
-                  cor: severidade.cor
+                Row(children: [
+                    _StatusChip(
+                      rotulo: "Severidade: ${severidade.rotulo}",
+                      cor: severidade.cor
+                    ),
+                    const SizedBox(width: 8),
+                    _StatusChip(
+                      rotulo: _statusAtual.rotulo,
+                      cor: _statusAtual.cor,
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                _StatusChip(
-                  rotulo: "Status: ${incidente.status.rotulo}",
-                  cor: Colors.white,
-                )
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _statusAtual = _statusAtual.proximo;
+                    });
+                  }, 
+                  child: Text("Avançar status")
+                ),
               ],
             ),
             const Divider(height: 24),
@@ -74,15 +97,15 @@ class IncidenteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:[
                 Text(
-                  incidente.responsavel ?? "Sem Responsavel",
+                  widget.incidente.responsavel ?? "Sem Responsavel",
                   style: TextStyle(
-                    fontStyle: incidente.responsavel == null ? FontStyle.italic : FontStyle.normal,
-                    color: incidente.responsavel == null ? Colors.grey[500] : Colors.white,
+                    fontStyle: widget.incidente.responsavel == null ? FontStyle.italic : FontStyle.normal,
+                    color: widget.incidente.responsavel == null ? Colors.grey[500] : Colors.white,
                     fontSize: 13,
                   ),
                 ),
                 Text( 
-                  incidente.tempoDecorrido,
+                  widget.incidente.tempoDecorrido,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 13,

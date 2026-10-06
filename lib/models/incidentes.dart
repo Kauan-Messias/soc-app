@@ -26,12 +26,21 @@ enum Severidade {
 }
 
 enum StatusIncidente {
-  aberto("Aberto"),
-  emAndamento("Em andamento"),
-  resolvido("Resolvido");
+  aberto("Aberto", Colors.red),
+  emAndamento("Em andamento", Colors.amber),
+  resolvido("Resolvido", Colors.green);
 
   final String rotulo;
-  const StatusIncidente(this.rotulo);
+  final Color cor;
+  const StatusIncidente(this.rotulo, this.cor);
+
+  StatusIncidente get proximo {
+    return switch (this) {
+      StatusIncidente.aberto => StatusIncidente.emAndamento,
+      StatusIncidente.emAndamento => StatusIncidente.resolvido,
+      StatusIncidente.resolvido => StatusIncidente.aberto,
+    };
+  }
 }
 
 // Classe de Dados
