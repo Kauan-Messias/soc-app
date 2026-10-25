@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import "../models/incidentes.dart";
 import "../screens/central_de_incidentes.dart";
 //Kauan - https://share.gemini.google/846ClN6vmRok
@@ -65,3 +66,22 @@ final List<Incidente> listaIncidentes = [
 void main() {
   runApp(CentralIncidentesApp(listaIncidentes: listaIncidentes));
 }
+=======
+import 'screens/lista_incidentes_screen.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Central de Incidentes',
+      theme: ThemeData(
+        colorSchemeSeed: Colors.teal,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.teal,
+          foregroundColor: Colors.white,
+        ),
+      ),
+      home: const ListaIncidentesScreen(),
+    ),
+  );
+}
+>>>>>>> main
