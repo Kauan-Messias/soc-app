@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
-import "../models/incidentes.dart";
-import "../widgets/incidente_card.dart";
+import "../models/incidente.dart";
+//import "../widgets/incidente_card.dart";
+import 'lista_incidentes_screen.dart';
 
 class CentralIncidentesApp extends StatelessWidget {
   final List<Incidente> listaIncidentes;
@@ -15,19 +16,7 @@ class CentralIncidentesApp extends StatelessWidget {
     return MaterialApp(
       title: 'Central de Incidentes',
       theme: ThemeData.dark(),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Central de Incidentes'),
-          backgroundColor: Colors.blue,
-          centerTitle: true,
-        ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          children: listaIncidentes
-          .map((incidente) => IncidenteCard(incidente: incidente))
-          .toList(),
-        )
-      ),
+      home: const ListaIncidentesScreen(),
     );
   }
 }

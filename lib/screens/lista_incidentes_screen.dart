@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/incidente.dart';
 import '../widgets/incidente_card.dart';
+import 'detalhe_incidente_screen.dart';
 
 final agora = DateTime.now();
 
@@ -60,17 +61,42 @@ final List<Incidente> incidentes = [
   ),
 ];
 
-class ListaIncidentesScreen extends StatelessWidget {
+class ListaIncidentesScreen extends StatefulWidget {
   const ListaIncidentesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ListaIncidentesScreen> createState() => _ListaIncidentesScreenState();
+}
+
+class _ListaIncidentesScreenState extends State<ListaIncidentesScreen> {
+  Future<void> _abrirDetalhes(Incidente incidente) async {
+    // Abre a tela de detalhes e aguarda o novo status retornado ao fechar/salvar
+    final novoStatus = await Navigator.push<StatusIncidente>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetalheIncidenteScreen(incidente: incidente),
+      ),
+    );
+
+    // Se o status foi alterado, atualiza o ecrã
+    if (novoStatus != null && novoStatus != incidente.status) {
+      setState(() {
+        incidente.status = novoStatus;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {  
     return Scaffold(
       appBar: AppBar(title: const Text('Incidentes')),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: incidentes
-            .map((incidente) => IncidenteCard(incidente: incidente))
+            .map((incidente) => IncidenteCard(
+                  incidente: incidente,
+                  onTap: () => _abrirDetalhes(incidente), 
+                ))
             .toList(),
       ),
     );
