@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/incidente.dart';
 import '../widgets/incidente_card.dart';
 import 'detalhe_incidente_screen.dart';
+import 'novo_incidente_screen.dart'; // Importação da nova tela do formulário
 
 final agora = DateTime.now();
 
@@ -105,8 +106,44 @@ class _ListaIncidentesScreenState extends State<ListaIncidentesScreen> {
       appBar: AppBar(title: const Text('Incidentes')),
       body: Column(
         children: [
+          // Botão Novo Incidente posicionado acima dos filtros
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Calcula o próximo identificador sequencial (ex: INC-1046)
+                  int proximoNumero = 1045;
+                  if (incidentes.isNotEmpty) {
+                    proximoNumero = incidentes
+                        .map((e) => int.tryParse(e.id.replaceAll('INC-', '')) ?? 1045)
+                        .reduce((a, b) => a > b ? a : b);
+                  }
+                  proximoNumero += 1;
+
+                  // Abre a tela de formulário aguardando o retorno
+                  final novoIncidente = await Navigator.push<Incidente>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          NovoIncidenteScreen(proximoNumeroId: proximoNumero),
+                    ),
+                  );
+
+                  // Se um incidente válido foi retornado, adiciona na lista com setState
+                  if (novoIncidente != null) {
+                    setState(() {
+                      incidentes.insert(0, novoIncidente);
+                    });
+                  }
+                },
+                child: const Text('Novo incidente'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 ChoiceChip(
